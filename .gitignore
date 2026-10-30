@@ -41,3 +41,6 @@ __pycache__/
 Thumbs.db
 *.swp
 *.swo
+
+# Standalone API workspace
+workspace-server/

@@ -6,7 +6,6 @@ import {
   connect,
   createMap,
   removeNode,
-  stageIndex,
   uid,
   validateMap,
   validateMetamodel,
@@ -14,6 +13,7 @@ import {
 import { exportSvg } from "./canvas.ts";
 import { native } from "./storage.ts";
 import { captureMap } from "./snapshot.ts";
+import { describeMap } from "./map-model.ts";
 
 export interface ApiResponse {
   status: number;
@@ -121,40 +121,13 @@ export class EditorApi {
   modelSnapshot(id = this.studio.activeId) {
     const map = this.map(id);
     const metamodel = this.studio.model;
-    const kind = metamodel.mapKinds.find((kind) => kind.id === map.kind)!;
-    const axis = metamodel.componentTypes.find(
-      (type) => type.id === kind.axisType,
-    )!;
     return {
-      map: copy(map),
+      ...describeMap(map, metamodel),
       active: id === this.studio.activeId,
       hasUnsavedChanges: this.studio.dirty.has(id),
-      kind: copy(kind),
-      axes: {
-        evolution: { min: 0, max: 1, stages: copy(axis.stageLabels) },
-        visibility: { min: 0, max: 1 },
-      },
-      components: map.nodes.map((node) => {
-        const type = metamodel.componentTypes.find(
-          (type) => type.id === node.type,
-        )!;
-        const index = stageIndex(node.evolution);
-        return {
-          ...copy(node),
-          typeDefinition: copy(type),
-          stage: { index, label: type.stageLabels[index] },
-          incomingLinkIds: map.edges
-            .filter((edge) => edge.target === node.id)
-            .map((edge) => edge.id),
-          outgoingLinkIds: map.edges
-            .filter((edge) => edge.source === node.id)
-            .map((edge) => edge.id),
-        };
-      }),
-      links: copy(map.edges),
-      metamodel: copy(metamodel),
     };
   }
+
   state() {
     const s = this.studio;
     return {

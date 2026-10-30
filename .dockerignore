@@ -1,0 +1,14 @@
+**
+!Dockerfile
+!package.json
+!package-lock.json
+!src/
+!src/model.ts
+!src/map-model.ts
+!src/canvas.ts
+!src/icons.ts
+!src/types.ts
+!server/
+!server/**
+!examples/
+!examples/metamodel.json

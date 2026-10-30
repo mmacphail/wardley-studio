@@ -146,3 +146,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for checks and contribution guidance, [SE
 ## Sources
 
 Wardley Mapping is by Simon Wardley, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). The component families and evolution vocabulary follow [Learn Wardley Mapping's landscape reference](https://learnwardleymapping.com/landscape/). The original example maps, application code and icon in this project are provided under the MIT license. Native IPC and file dialogs follow the official [Tauri commands](https://v2.tauri.app/develop/calling-rust/) and [dialog plugin](https://v2.tauri.app/plugin/dialog/) documentation. The local HTTP transport uses [tiny_http](https://docs.rs/tiny_http/latest/tiny_http/) and [Tauri frontend events](https://v2.tauri.app/develop/calling-frontend/).
+
+## Hosted API
+
+The API can also run independently on Fly.io with token authentication and persistent JSON storage. See [Hosted API](docs/HOSTED_API.md) for deployment, routes, backups, and concurrency requirements. Desktop and hosted workspaces are independent; automatic synchronization is not included.
