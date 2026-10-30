@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "id": "coffee-shop",
+  "title": "The coffee shop",
+  "kind": "landscape",
+  "description": "From a customer\u2019s first sip to the infrastructure behind it. A starting point for exploring what makes a great coffee experience.",
+  "createdAt": "2026-10-30T09:00:00.000Z",
+  "updatedAt": "2026-10-30T09:00:00.000Z",
+  "nodes": [
+    {
+      "id": "customer",
+      "label": "Customer",
+      "type": "user",
+      "evolution": 0.48,
+      "visibility": 0.96,
+      "notes": ""
+    },
+    {
+      "id": "coffee",
+      "label": "A great cup of coffee",
+      "type": "need",
+      "evolution": 0.48,
+      "visibility": 0.79,
+      "notes": ""
+    },
+    {
+      "id": "experience",
+      "label": "In-store experience",
+      "type": "activity",
+      "evolution": 0.32,
+      "visibility": 0.59,
+      "notes": ""
+    },
+    {
+      "id": "brewing",
+      "label": "Brewing coffee",
+      "type": "activity",
+      "evolution": 0.6,
+      "visibility": 0.55,
+      "notes": ""
+    },
+    {
+      "id": "beans",
+      "label": "Coffee beans",
+      "type": "activity",
+      "evolution": 0.79,
+      "visibility": 0.36,
+      "notes": ""
+    },
+    {
+      "id": "barista",
+      "label": "Barista expertise",
+      "type": "knowledge",
+      "evolution": 0.4,
+      "visibility": 0.3,
+      "notes": ""
+    },
+    {
+      "id": "payment",
+      "label": "Payments",
+      "type": "activity",
+      "evolution": 0.85,
+      "visibility": 0.61,
+      "notes": ""
+    },
+    {
+      "id": "training",
+      "label": "Barista training",
+      "type": "practice",
+      "evolution": 0.23,
+      "visibility": 0.13,
+      "notes": ""
+    },
+    {
+      "id": "power",
+      "label": "Electricity",
+      "type": "activity",
+      "evolution": 0.91,
+      "visibility": 0.13,
+      "notes": ""
+    },
+    {
+      "id": "machine",
+      "label": "Coffee machine",
+      "type": "activity",
+      "evolution": 0.66,
+      "visibility": 0.15,
+      "notes": ""
+    }
+  ],
+  "edges": [
+    {
+      "id": "coffee-shop-e0",
+      "source": "customer",
+      "target": "coffee",
+      "kind": "dependency",
+      "label": ""
+    },
+    {
+      "id": "coffee-shop-e1",
+      "source": "coffee",
+      "target": "experience",
+      "kind": "dependency",
+      "label": ""
+    },
+    {
+      "id": "coffee-shop-e2",
+      "source": "coffee",
+      "target": "brewing",
+      "kind": "dependency",
+      "label": ""
+    },
+    {
+      "id": "coffee-shop-e3",
+      "source": "coffee",
+      "target": "payment",
+      "kind": "dependency",
+      "label": ""
+    },
+    {
+      "id": "coffee-shop-e4",
+      "source": "experience",
+      "target": "barista",
+      "kind": "dependency",
+      "label": ""
+    },
+    {
+      "id": "coffee-shop-e5",
+      "source": "barista",
+      "target": "training",
+      "kind": "dependency",
+      "label": ""
+    },
+    {
+      "id": "coffee-shop-e6",
+      "source": "brewing",
+      "target": "beans",
+      "kind": "dependency",
+      "label": ""
+    },
+    {
+      "id": "coffee-shop-e7",
+      "source": "brewing",
+      "target": "machine",
+      "kind": "dependency",
+      "label": ""
+    },
+    {
+      "id": "coffee-shop-e8",
+      "source": "machine",
+      "target": "power",
+      "kind": "dependency",
+      "label": ""
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "id": "platform-future",
+  "title": "A platform, evolving",
+  "kind": "future",
+  "description": "A future-state discussion: move undifferentiated infrastructure toward commodity services and invest in the customer experience.",
+  "createdAt": "2026-10-30T09:00:00.000Z",
+  "updatedAt": "2026-10-30T09:00:00.000Z",
+  "nodes": [
+    {
+      "id": "team",
+      "label": "Product teams",
+      "type": "user",
+      "evolution": 0.4,
+      "visibility": 0.94,
+      "notes": ""
+    },
+    {
+      "id": "delivery",
+      "label": "Faster delivery",
+      "type": "need",
+      "evolution": 0.4,
+      "visibility": 0.76,
+      "notes": ""
+    },
+    {
+      "id": "platform",
+      "label": "Developer platform",
+      "type": "activity",
+      "evolution": 0.31,
+      "visibility": 0.53,
+      "notes": "",
+      "targetEvolution": 0.66
+    },
+    {
+      "id": "deploy",
+      "label": "Deployment workflow",
+      "type": "practice",
+      "evolution": 0.41,
+      "visibility": 0.3,
+      "notes": "",
+      "targetEvolution": 0.78
+    },
+    {
+      "id": "observability",
+      "label": "Observability",
+      "type": "activity",
+      "evolution": 0.64,
+      "visibility": 0.47,
+      "notes": ""
+    },
+    {
+      "id": "compute",
+      "label": "Compute",
+      "type": "activity",
+      "evolution": 0.62,
+      "visibility": 0.1,
+      "notes": "",
+      "targetEvolution": 0.92,
+      "inertia": true
+    },
+    {
+      "id": "insights",
+      "label": "Developer insights",
+      "type": "data",
+      "evolution": 0.18,
+      "visibility": 0.23,
+      "notes": ""
+    }
+  ],
+  "edges": [
+    {
+      "id": "platform-future-e0",
+      "source": "team",
+      "target": "delivery",
+      "kind": "dependency",
+      "label": ""
+    },
+    {
+      "id": "platform-future-e1",
+      "source": "delivery",
+      "target": "platform",
+      "kind": "dependency",
+      "label": ""
+    },
+    {
+      "id": "platform-future-e2",
+      "source": "platform",
+      "target": "deploy",
+      "kind": "dependency",
+      "label": ""
+    },
+    {
+      "id": "platform-future-e3",
+      "source": "platform",
+      "target": "observability",
+      "kind": "dependency",
+      "label": ""
+    },
+    {
+      "id": "platform-future-e4",
+      "source": "deploy",
+      "target": "compute",
+      "kind": "dependency",
+      "label": ""
+    },
+    {
+      "id": "platform-future-e5",
+      "source": "platform",
+      "target": "insights",
+      "kind": "dependency",
+      "label": ""
+    }
+  ]
+}

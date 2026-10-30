@@ -1,0 +1,43 @@
+node_modules/
+dist/
+src-tauri/target/
+src-tauri/gen/
+test-results/
+playwright-report/
+blob-report/
+coverage/
+*.log
+__pycache__/
+*.py[cod]
+
+# Personal maps and local application state; publish examples/ instead.
+/workspace/
+**/.trash/
+/chat.json
+/chat-runtime/
+/api.json
+/workspace-location.json
+/wardley-openapi.json
+
+# Local credentials and tool settings.
+.env
+.env.*
+!.env.example
+.codex/
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Installers belong in release artifacts, not source control.
+*.deb
+*.rpm
+*.AppImage
+*.dmg
+*.msi
+*.exe
+
+.DS_Store
+Thumbs.db
+*.swp
+*.swo

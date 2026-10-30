@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "id": "working-practices",
+  "title": "How we work",
+  "kind": "practices",
+  "description": "Explore the practices that support reliable delivery. Horizontal position uses practice-specific stages: Novel, Emerging, Good and Best.",
+  "createdAt": "2026-10-30T09:00:00.000Z",
+  "updatedAt": "2026-10-30T09:00:00.000Z",
+  "nodes": [
+    {
+      "id": "team",
+      "label": "Delivery team",
+      "type": "user",
+      "evolution": 0.48,
+      "visibility": 0.94,
+      "notes": ""
+    },
+    {
+      "id": "reliability",
+      "label": "Reliable delivery",
+      "type": "need",
+      "evolution": 0.48,
+      "visibility": 0.76,
+      "notes": ""
+    },
+    {
+      "id": "experiments",
+      "label": "AI-assisted discovery",
+      "type": "practice",
+      "evolution": 0.12,
+      "visibility": 0.54,
+      "notes": ""
+    },
+    {
+      "id": "reviews",
+      "label": "Peer review",
+      "type": "practice",
+      "evolution": 0.67,
+      "visibility": 0.51,
+      "notes": ""
+    },
+    {
+      "id": "testing",
+      "label": "Continuous testing",
+      "type": "practice",
+      "evolution": 0.81,
+      "visibility": 0.28,
+      "notes": ""
+    },
+    {
+      "id": "learning",
+      "label": "Learning reviews",
+      "type": "practice",
+      "evolution": 0.41,
+      "visibility": 0.28,
+      "notes": ""
+    },
+    {
+      "id": "automation",
+      "label": "Build automation",
+      "type": "activity",
+      "evolution": 0.89,
+      "visibility": 0.1,
+      "notes": ""
+    }
+  ],
+  "edges": [
+    {
+      "id": "working-practices-e0",
+      "source": "team",
+      "target": "reliability",
+      "kind": "dependency",
+      "label": ""
+    },
+    {
+      "id": "working-practices-e1",
+      "source": "reliability",
+      "target": "experiments",
+      "kind": "dependency",
+      "label": ""
+    },
+    {
+      "id": "working-practices-e2",
+      "source": "reliability",
+      "target": "reviews",
+      "kind": "dependency",
+      "label": ""
+    },
+    {
+      "id": "working-practices-e3",
+      "source": "reviews",
+      "target": "testing",
+      "kind": "dependency",
+      "label": ""
+    },
+    {
+      "id": "working-practices-e4",
+      "source": "experiments",
+      "target": "learning",
+      "kind": "dependency",
+      "label": ""
+    },
+    {
+      "id": "working-practices-e5",
+      "source": "testing",
+      "target": "automation",
+      "kind": "dependency",
+      "label": ""
+    }
+  ]
+}

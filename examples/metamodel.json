@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "name": "Wardley mapping",
+  "componentTypes": [
+    {
+      "id": "user",
+      "label": "User",
+      "description": "The people or organisations whose needs anchor this map.",
+      "color": "#3f4b50",
+      "shape": "person",
+      "stageLabels": [
+        "Genesis",
+        "Custom built",
+        "Product (+ rental)",
+        "Commodity (+ utility)"
+      ]
+    },
+    {
+      "id": "need",
+      "label": "User need",
+      "description": "The outcome a user needs to achieve.",
+      "color": "#bd633e",
+      "shape": "diamond",
+      "stageLabels": [
+        "Genesis",
+        "Custom built",
+        "Product (+ rental)",
+        "Commodity (+ utility)"
+      ]
+    },
+    {
+      "id": "activity",
+      "label": "Activity",
+      "description": "What we do: a capability, service or technology.",
+      "color": "#526e5c",
+      "shape": "circle",
+      "stageLabels": [
+        "Genesis",
+        "Custom built",
+        "Product (+ rental)",
+        "Commodity (+ utility)"
+      ]
+    },
+    {
+      "id": "practice",
+      "label": "Practice",
+      "description": "How we do it: a method, process or way of working.",
+      "color": "#8b729f",
+      "shape": "hexagon",
+      "stageLabels": ["Novel", "Emerging", "Good", "Best"]
+    },
+    {
+      "id": "data",
+      "label": "Data",
+      "description": "How we measure it: information and its structure.",
+      "color": "#507d98",
+      "shape": "square",
+      "stageLabels": ["Unmodelled", "Divergent", "Convergent", "Modelled"]
+    },
+    {
+      "id": "knowledge",
+      "label": "Knowledge",
+      "description": "How we understand it: concepts, evidence and understanding.",
+      "color": "#ad8944",
+      "shape": "diamond",
+      "stageLabels": ["Concept", "Hypothesis", "Theory", "Accepted"]
+    }
+  ],
+  "mapKinds": [
+    {
+      "id": "landscape",
+      "label": "Landscape",
+      "description": "Understand the current value chain and its evolution.",
+      "axisType": "activity"
+    },
+    {
+      "id": "future",
+      "label": "Future state",
+      "description": "Explore where capabilities could evolve next.",
+      "axisType": "activity"
+    },
+    {
+      "id": "practices",
+      "label": "Practices",
+      "description": "Map ways of working, from novel to best practice.",
+      "axisType": "practice"
+    },
+    {
+      "id": "data",
+      "label": "Data landscape",
+      "description": "Explore information from unmodelled to modelled.",
+      "axisType": "data"
+    },
+    {
+      "id": "knowledge",
+      "label": "Knowledge",
+      "description": "Make assumptions and established understanding visible.",
+      "axisType": "knowledge"
+    }
+  ]
+}
