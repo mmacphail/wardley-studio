@@ -254,6 +254,8 @@ export async function createApi(root: string, token: string) {
             const png = new Resvg(svg, {
               background: "#fdfcf9",
               font: {
+                // Slim containers do not have fontconfig; scan the installed fonts directly.
+                fontDirs: ["/usr/share/fonts/truetype/dejavu"],
                 defaultFontFamily: "DejaVu Sans",
                 sansSerifFamily: "DejaVu Sans",
               },
