@@ -124,6 +124,19 @@ test("cloud API authenticates, validates, serializes edits, renders, and persist
     const png = await call("GET", path + "/snapshot.png");
     assert.equal(png.body.subarray(0, 8).toString("hex"), "89504e470d0a1a0a");
     assert.equal(png.body.readUInt32BE(16), 1650);
+    const relabeled = await call(
+      "PATCH",
+      path + `/components/${first.body.id}`,
+      { label: "Visible label regression check" },
+      png.revision,
+    );
+    assert.equal(relabeled.status, 200);
+    const relabeledPng = await call("GET", path + "/snapshot.png");
+    assert.notDeepEqual(
+      relabeledPng.body,
+      png.body,
+      "Changing only a label must change rendered pixels",
+    );
     assert.equal((await call("GET", path + "/export/svg")).status, 200);
     const meta = await call("GET", "/api/v1/metamodel");
     const badMeta = structuredClone(meta.body);

@@ -253,7 +253,10 @@ export async function createApi(root: string, token: string) {
             const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1650" height="1140" viewBox="0 0 1100 760">${graphContent(map, model.value, null, null, true)}</svg>`;
             const png = new Resvg(svg, {
               background: "#fdfcf9",
-              font: { defaultFontFamily: "DejaVu Sans" },
+              font: {
+                defaultFontFamily: "DejaVu Sans",
+                sansSerifFamily: "DejaVu Sans",
+              },
             })
               .render()
               .asPng();
