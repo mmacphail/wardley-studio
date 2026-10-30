@@ -3,6 +3,7 @@ mod api;
 #[cfg(feature = "chat")]
 mod chat;
 mod features;
+mod remote;
 mod repository;
 use repository::{Repository, Result, Workspace};
 use serde_json::Value;
@@ -61,7 +62,7 @@ async fn choose_workspace(app: tauri::AppHandle, store: State<'_, Store>) -> Res
     Ok(true)
 }
 #[tauri::command]
-async fn import_map(app: tauri::AppHandle, store: State<'_, Store>) -> Result<Option<Value>> {
+async fn import_map(app: tauri::AppHandle) -> Result<Option<Value>> {
     let Some(file) = app
         .dialog()
         .file()
@@ -71,7 +72,7 @@ async fn import_map(app: tauri::AppHandle, store: State<'_, Store>) -> Result<Op
         return Ok(None);
     };
     let (map, _) = repository::read_json(&file.into_path().map_err(|e| e.to_string())?)?;
-    repository::validate_map(&map, locked(&store)?.load()?.metamodel_value())?;
+    // The frontend validates against the currently selected local or remote metamodel.
     Ok(Some(map))
 }
 #[tauri::command]
@@ -113,6 +114,10 @@ fn main() {
         .plugin(tauri_plugin_dialog::init())
         .setup(|app| {
             app.manage(features::AppFeatures::from_env());
+            app.manage(
+                remote::Remote::new(app.path().app_config_dir()?.join("remote-connection.json"))
+                    .map_err(std::io::Error::other)?,
+            );
             let preference = app.path().app_config_dir()?.join("workspace-location.json");
             let preferred = std::fs::read_to_string(&preference)
                 .ok()
@@ -146,6 +151,9 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             features::app_features,
             load_workspace,
+            remote::connection_info,
+            remote::connection_set,
+            remote::remote_request,
             save_map,
             save_metamodel,
             delete_map,

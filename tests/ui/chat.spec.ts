@@ -81,9 +81,11 @@ test.beforeEach(async ({ page }) => {
                   method: mock.mode.startsWith("snapshot") ? "GET" : "PATCH",
                   path: mock.mode.startsWith("snapshot")
                     ? "/api/v1/current-map/snapshot"
-                    : mock.mode === "blocked"
-                      ? "/api/v1/chat/messages?query=1"
-                      : "/api/v1/maps/coffee-shop/components/experience",
+                    : mock.mode === "connection"
+                      ? "/api/v1/connection"
+                      : mock.mode === "blocked"
+                        ? "/api/v1/chat/messages?query=1"
+                        : "/api/v1/maps/coffee-shop/components/experience",
                   body: { label: "Updated by assistant", stage: 2 },
                 },
               },
@@ -146,6 +148,29 @@ test.beforeEach(async ({ page }) => {
   await page.goto("/");
   await page.locator('[data-action="chat"]').click();
   await expect(page.locator("#chat-account")).toContainText("ChatGPT · plus");
+});
+
+test("assistant cannot change workspace connections or access credentials", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.waitForFunction(() => !!window.wardleyApi);
+  await page.evaluate(() => {
+    (window as any).__chatMock.mode = "connection";
+  });
+  await page.evaluate(() =>
+    window.wardleyApi!.request("POST", "/api/v1/chat/messages", {
+      text: "Change connection",
+    }),
+  );
+  await expect
+    .poll(() => page.evaluate(() => (window as any).__chatMock.replies.length))
+    .toBeGreaterThan(0);
+  expect(
+    JSON.stringify(
+      await page.evaluate(() => (window as any).__chatMock.replies),
+    ),
+  ).toContain("This route is not available");
 });
 
 test("chat streams tool actions into the live map, saves and supports Undo", async ({

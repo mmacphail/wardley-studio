@@ -123,8 +123,12 @@ export class Studio {
       }
     } catch (error) {
       $("#app").innerHTML =
-        `<div class="loading"><div class="brand-mark">w<span>•</span></div><h2>Could not open the workspace</h2><p>${e(String(error))}</p><button class="primary" id="retry">Try again</button></div>`;
+        `<div class="loading"><div class="brand-mark">w<span>•</span></div><h2>Could not open the workspace</h2><p>${e(String(error))}</p><button class="primary" id="retry">Try again</button>${native ? '<button class="quiet" id="recover-local">Open local workspace</button>' : ""}</div>`;
       $("#retry").addEventListener("click", () => location.reload());
+      $("#recover-local")?.addEventListener("click", async () => {
+        await this.storage.connect("local");
+        location.reload();
+      });
     }
   }
   checkpoint(before = clone(this.map)) {
@@ -198,7 +202,11 @@ export class Studio {
     const status = $("#save-status");
     if (!status) return;
     const text = {
-      saved: native ? "Saved to disk" : "Saved in browser",
+      saved: this.storage.remote
+        ? "Saved to server"
+        : native
+          ? "Saved to disk"
+          : "Saved in browser",
       saving: "Saving…",
       dirty: "Unsaved changes",
       error: "Save failed · click to retry",
@@ -257,7 +265,7 @@ export class Studio {
         <nav class="map-list" aria-label="Map library">${this.library()}</nav>
         <div class="sidebar-bottom">
           <button class="sidebar-action" data-action="import">${icon("import", 17)}<span>Import JSON map</span></button>
-          <button class="sidebar-action" data-action="workspace" title="${e(this.ws.path)}">${icon("folder", 17)}<span>Workspace folder</span></button>
+          <button class="sidebar-action" data-action="workspace" title="${e(this.ws.path)}">${icon("folder", 17)}<span>Workspace</span></button>
           <button class="sidebar-action" data-action="metamodel">${icon("settings", 17)}<span>Metamodel</span></button>
           <button class="sidebar-action" data-action="api">${icon("json", 17)}<span>API</span></button>
         <button class="sidebar-action" data-action="help">${icon("help", 17)}<span>Help</span></button>
@@ -1247,11 +1255,57 @@ export class Studio {
     );
   }
   workspaceDialog() {
+    const remote = this.storage.remote;
     this.modal(
       "Workspace",
       "",
-      `<div class="path-box">${icon("folder")}<code>${e(this.ws.path)}</code></div><div class="file-tree"><div>${icon("json", 15)} metamodel.json <small>Types, shapes, stages & map kinds</small></div><div>${icon("folder", 15)} maps/ <small>One JSON file per map</small></div><div>${icon("folder", 15)} .trash/ <small>Recoverable deleted maps</small></div></div>${this.dirty.size ? '<p class="conflict-note">There are unsaved changes. Export the current map before discarding them.</p>' : ""}<div class="workspace-actions">${native ? '<button class="primary" data-modal-action="choose-workspace">Open a workspace folder</button>' : '<p class="inspector-tip">Browser storage. Export to save JSON files.</p>'}<button class="quiet" data-modal-action="import">Import JSON map</button><button class="quiet" data-modal-action="reload">Reload from ${native ? "disk" : "browser storage"}</button>${this.dirty.size ? '<button class="danger-text" id="discard-reload">Discard unsaved changes and reload</button>' : ""}</div>`,
+      `<div class="path-box">${icon("folder")}<code>${e(this.ws.path)}</code></div>
+      ${
+        native
+          ? `<form id="connection-form">
+        <label class="field">Storage<select id="connection-mode"><option value="local" ${remote ? "" : "selected"}>Local folder</option><option value="remote" ${remote ? "selected" : ""}>Remote server</option></select></label>
+        <div id="remote-fields" ${remote ? "" : "hidden"}>
+          <label class="field">Server URL<input id="connection-url" type="url" placeholder="https://your-server.example" value="${e(this.storage.connection.url ?? "")}" autocomplete="off"></label>
+          <label class="field">API token<input id="connection-token" type="password" autocomplete="off" placeholder="${remote ? "Leave blank to use saved token" : "API token"}"></label>
+          <p class="inspector-tip">Token stored in the system keyring. Existing maps are not moved when switching storage.</p>
+        </div>
+        <div class="modal-actions"><button type="button" class="quiet" data-modal-action="choose-workspace">Open local folder</button><button class="primary" type="submit">Connect</button></div>
+      </form>`
+          : '<p class="inspector-tip">Browser storage. Export to save JSON files.</p>'
+      }
+      <div class="workspace-actions"><button class="quiet" data-modal-action="import">Import JSON map</button><button class="quiet" data-modal-action="reload">Reload</button>${this.dirty.size ? '<button class="danger-text" id="discard-reload">Discard unsaved changes and reload</button>' : ""}</div>`,
     );
+    $("#connection-mode")?.addEventListener("change", () => {
+      $("#remote-fields").hidden =
+        $<HTMLSelectElement>("#connection-mode").value !== "remote";
+    });
+    $("#connection-form")?.addEventListener("submit", async (ev) => {
+      ev.preventDefault();
+      const submit = $<HTMLButtonElement>(
+        '#connection-form button[type="submit"]',
+      );
+      submit.disabled = true;
+      try {
+        if (this.chat?.busy)
+          throw new Error(
+            "Wait for the assistant to finish before changing connections.",
+          );
+        await this.flushAll(true);
+        await this.storage.connect(
+          $<HTMLSelectElement>("#connection-mode").value as "local" | "remote",
+          $<HTMLInputElement>("#connection-url").value,
+          $<HTMLInputElement>("#connection-token").value,
+        );
+        $<HTMLInputElement>("#connection-token").value = "";
+        this.closeModal();
+        await this.reload();
+      } catch (error) {
+        if ($("#modal-error")) $("#modal-error").textContent = String(error);
+        else this.toast(String(error), true);
+      } finally {
+        submit.disabled = false;
+      }
+    });
     $("#discard-reload")?.addEventListener("click", () => {
       this.modal(
         "Discard unsaved changes?",

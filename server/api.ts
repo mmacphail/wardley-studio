@@ -188,17 +188,25 @@ export async function createApi(root: string, token: string) {
             chat: false,
             chatCompiled: false,
             headless: true,
+            remoteWorkspace: true,
             snapshots: true,
             optimisticConcurrency: true,
           });
         const model = await store.model();
-        if (p[0] === "workspace")
+        if (p[0] === "workspace") {
+          const maps = await store.list();
+          const revisions: Record<string, string> = {};
+          for (const map of maps)
+            revisions[map.id] = (await store.map(map.id)).revision;
           return send(res, 200, {
             schemaVersion: 1,
             exportedAt: new Date().toISOString(),
             metamodel: model.value,
-            maps: await store.list(),
+            metamodelRevision: model.revision,
+            maps,
+            revisions,
           });
+        }
         if (p[0] === "metamodel") {
           if (method === "GET")
             return send(res, 200, model.value, model.revision);
@@ -214,13 +222,17 @@ export async function createApi(root: string, token: string) {
         if ((p.length === 1 || p[1] === "import") && method === "POST") {
           let map;
           if (p[1] === "import") {
-            validate(() => validateMap(b, model.value));
-            map = {
-              ...b,
-              id: uid(),
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString(),
-            } as any;
+            const imported = b.map === undefined ? b : object(b.map);
+            validate(() => validateMap(imported, model.value));
+            if (b.map !== undefined && b.preserveId === true)
+              map = imported as any;
+            else
+              map = {
+                ...imported,
+                id: uid(),
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+              } as any;
           } else {
             map = createMap(b.title, b.kind ?? model.value.mapKinds[0].id);
             map.description = b.description ?? "";

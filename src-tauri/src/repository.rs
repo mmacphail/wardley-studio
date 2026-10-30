@@ -37,11 +37,6 @@ pub struct Workspace {
     revisions: HashMap<String, String>,
     metamodel_revision: String,
 }
-impl Workspace {
-    pub fn metamodel_value(&self) -> &Value {
-        &self.metamodel
-    }
-}
 pub struct Repository {
     pub root: PathBuf,
 }

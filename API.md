@@ -235,3 +235,9 @@ The assistant's `get_map_snapshot` tool returns the PNG as image content plus te
 `GET /api/v1/features` reports `chat` (available in this session) and `chatCompiled` (included in the effective frontend/native build). `/api/v1/state` includes the same `features` object. Flags are read-only through the API.
 
 With `WARDLEY_CHAT_ENABLED=0`, chat is disabled at native startup. With `npm run desktop:build:core`, chat is excluded at build time and cannot be enabled by runtime configuration. Disabled chat routes, including `/chat`, its subroutes and `/actions/chat`, return 404 and are omitted from `/routes` and `/openapi.json`. Other editor routes, including PNG snapshots, remain available. See the README for flag values and build commands.
+
+## Workspace connections
+
+`GET /api/v1/connection` returns `{mode, url, credentialStorage}` without credentials. `PUT /api/v1/connection` accepts `{mode: "remote", url: "https://your-server.example", token: "..."}` or `{mode: "local"}`. Send the token in the JSON body, never in a URL. Remote settings require the native app and a working system keyring. Omitting the token reuses the saved credential for that server. Pending edits must save before switching. The assistant cannot call connection routes.
+
+The editor API keeps its existing routes in remote mode. Reads describe the loaded editor state; successful changes autosave to the selected server. `POST /api/v1/workspace/reload` refreshes remote state. Hosted server routes and concurrency rules are described in [Hosted API](docs/HOSTED_API.md).

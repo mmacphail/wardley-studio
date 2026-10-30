@@ -19,6 +19,8 @@ tauri-plugin-dialog = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 tiny_http = "0.12"
+reqwest = { version = "0.13", default-features = false, features = ["json", "rustls"] }
+keyring = { version = "3.6", features = ["apple-native", "windows-native", "sync-secret-service", "crypto-rust", "vendored"] }
 uuid = { version = "1", features = ["v4"] }
 time = { version = "0.3", features = ["parsing"] }
 

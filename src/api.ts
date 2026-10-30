@@ -250,6 +250,43 @@ export class EditorApi {
     );
     this.add(
       "GET",
+      "/connection",
+      "Workspace connection (never returns credentials)",
+      () => s.storage.connectionInfo(),
+    );
+    this.add(
+      "PUT",
+      "/connection",
+      "Connect to local storage or an HTTPS server",
+      async (_, b) => {
+        fields(b, ["mode", "url", "token"]);
+        const mode = text(b, "mode");
+        if (mode !== "local" && mode !== "remote")
+          fail(422, "invalid_mode", "Choose local or remote.");
+        await s.flushAll(true);
+        if (s.chat?.busy)
+          fail(
+            409,
+            "chat_busy",
+            "Wait for the assistant to finish before changing connections.",
+          );
+        await s.storage.connect(
+          mode as "local" | "remote",
+          typeof b.url === "string" ? b.url : undefined,
+          typeof b.token === "string" ? b.token : undefined,
+        );
+        s.activeId = "";
+        await s.reload();
+        return s.storage.connectionInfo();
+      },
+      {
+        mode: "remote",
+        url: "https://your-server.example",
+        token: "YOUR_API_TOKEN",
+      },
+    );
+    this.add(
+      "GET",
       "/workspace",
       "Workspace path, metamodel, maps and warnings",
       () => s.ws,

@@ -4,7 +4,7 @@ import { mkdtemp, readdir, rm, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { once } from "node:events";
-import { createApi } from "../../server/api.ts";
+import { createApi, routes } from "../../server/api.ts";
 
 const token = "test-only-".repeat(6);
 test("cloud API authenticates, validates, serializes edits, renders, and persists", async () => {
@@ -49,6 +49,51 @@ test("cloud API authenticates, validates, serializes edits, renders, and persist
   try {
     assert.equal((await fetch(base + "/health")).status, 200);
     assert.equal((await fetch(base + "/api/v1/maps")).status, 401);
+    for (const [method, route] of routes) {
+      const response = await fetch(
+        base +
+          route
+            .replace(":id", "private-map")
+            .replace(":itemId", "private-component"),
+        { method, headers: { Authorization: "Bearer wrong-token" } },
+      );
+      assert.equal(
+        response.status,
+        401,
+        `${method} ${route} must require authentication`,
+      );
+      await response.arrayBuffer();
+    }
+    const privateMap = {
+      ...(await call("POST", "/api/v1/maps", { title: "ID preservation" }))
+        .body,
+      id: "preserved-id",
+    };
+    const preserved = await call("POST", "/api/v1/maps/import", {
+      map: privateMap,
+      preserveId: true,
+    });
+    assert.equal(preserved.status, 201);
+    assert.deepEqual(preserved.body, privateMap);
+    assert.equal(
+      (
+        await call("POST", "/api/v1/maps/import", {
+          map: privateMap,
+          preserveId: true,
+        })
+      ).status,
+      409,
+    );
+    const backup = (await call("GET", "/api/v1/workspace/export")).body;
+    assert.equal(backup.revisions[privateMap.id], preserved.revision);
+    assert.equal(typeof backup.metamodelRevision, "string");
+    for (const item of backup.maps)
+      await call(
+        "DELETE",
+        `/api/v1/maps/${item.id}`,
+        undefined,
+        backup.revisions[item.id],
+      );
     assert.equal(
       (
         await call("GET", "/api/v1/maps", undefined, undefined, {
@@ -178,9 +223,18 @@ test("cloud API authenticates, validates, serializes edits, renders, and persist
     );
     assert.equal((await call("GET", path)).status, 404);
     const trash = await readdir(join(root, ".trash"));
-    assert.equal(trash.length, 1);
+    assert.equal(trash.length, 3);
     assert.equal(
-      JSON.parse(await readFile(join(root, ".trash", trash[0]), "utf8")).id,
+      JSON.parse(
+        await readFile(
+          join(
+            root,
+            ".trash",
+            trash.find((name) => name.startsWith(created.body.id))!,
+          ),
+          "utf8",
+        ),
+      ).id,
       created.body.id,
     );
   } finally {

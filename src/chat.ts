@@ -574,7 +574,7 @@ export class ChatPanel {
     path = path.split("?")[0].replace(/\/$/, "");
     return (
       path.startsWith("/api/v1/") &&
-      !/\/(chat|api)(\/|$)|\/actions\/(api|export-openapi|chat[^/]*)(\/|$)|\/ui\/dialog/.test(
+      !/\/(chat|api|connection|workspace)(\/|$)|\/actions\/(api|workspace|choose-workspace|export-openapi|chat[^/]*)(\/|$)|\/ui\/dialog/.test(
         path.slice(7),
       )
     );

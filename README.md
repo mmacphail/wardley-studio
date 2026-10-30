@@ -149,4 +149,4 @@ Wardley Mapping is by Simon Wardley, [CC BY-SA 4.0](https://creativecommons.org/
 
 ## Hosted API
 
-The API can also run independently on Fly.io with token authentication and persistent JSON storage. See [Hosted API](docs/HOSTED_API.md) for deployment, routes, backups, and concurrency requirements. Desktop and hosted workspaces are independent; automatic synchronization is not included.
+The API can also run independently on Fly.io with token authentication and persistent JSON storage. See [Hosted API](docs/HOSTED_API.md) for deployment, routes, backups, and concurrency requirements. Use **Workspace → Remote server** in the native app to connect to any compatible HTTPS server. Edits autosave to that server; use **Reload** to fetch other clients’ changes. Local folders remain available.
